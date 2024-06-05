@@ -7,33 +7,48 @@ namespace WeatherForecast.BLL.Services
 {
     public class WeatherForecastService(IWeatherService weatherService, IMapper mapper) : IWeatherForecastService
     {
-        public async Task<IEnumerable<WeatherForecastModel>?> Get(decimal latitude, decimal longitude)
+        private Task<CurrentWeatherResponse?> GetCurrent(decimal latitude, decimal longitude)
         {
-            var currentRequest = new CurrentWeatherRequest
+            var request = new CurrentWeatherRequest
             {
                 Lat = latitude,
                 Lon = longitude
             };
 
-            var currentResponse = await weatherService.GetCurrent(currentRequest);
+            return weatherService.GetCurrent(request);
+        }
 
-            var currentWeather = mapper.Map<WeatherForecastModel>(currentResponse);
-
-            var forecastRequest = new ForecastWeatherRequest
+        private Task<ForecastWeatherResponse?> GetForecast(decimal latitude, decimal longitude)
+        {
+            var request = new ForecastWeatherRequest
             {
                 Lat = latitude,
                 Lon = longitude
             };
 
-            var forecastResponse = await weatherService.GetForecast(forecastRequest);
+            return weatherService.GetForecast(request);
+        }
 
-            var result = forecastResponse?.List == null ? null : mapper.Map<IEnumerable<WeatherForecastModel>>(forecastResponse.List);
+        public async Task<List<WeatherForecastModel>> Get(decimal latitude, decimal longitude)
+        {
+            var result = new List<WeatherForecastModel>();
 
-            if (currentWeather != null)
+            var currentResponse = await GetCurrent(latitude, longitude);
+
+            if (currentResponse != null)
             {
-                result ??= [];
+                var current = mapper.Map<WeatherForecastModel>(currentResponse);
 
-                result = result.Prepend(currentWeather);
+                result.Add(current);
+            }
+
+            var forecastResponse = await GetForecast(latitude, longitude);
+
+            if (forecastResponse != null)
+            {
+                var forecast = mapper.Map<List<WeatherForecastModel>>(forecastResponse.List);
+
+                result.AddRange(forecast);
             }
 
             return result;
