@@ -1,10 +1,11 @@
-﻿using WeatherForecast.BLL.Interfaces;
+﻿using AutoMapper;
+using WeatherForecast.BLL.Interfaces;
 using WeatherForecast.BLL.Models;
 using WeatherForecast.BLL.Models.WeatherData;
 
 namespace WeatherForecast.BLL.Services
 {
-    public class WeatherForecastService(IWeatherService weatherService) : IWeatherForecastService
+    public class WeatherForecastService(IWeatherService weatherService, IMapper mapper) : IWeatherForecastService
     {
         public async Task<IEnumerable<WeatherForecastModel>?> Get(decimal latitude, decimal longitude)
         {
@@ -16,12 +17,7 @@ namespace WeatherForecast.BLL.Services
 
             var response = await weatherService.GetForecast(request);
 
-            return response?.List.Select(x => new WeatherForecastModel
-            {
-                Date = DateTimeOffset.FromUnixTimeSeconds(x.Dt).DateTime,
-                TemperatureK = x.Main.Temp,
-                Summary = x.Weather.First().Description
-            });
+            return response?.List == null ? null : mapper.Map<IEnumerable<WeatherForecastModel>>(response.List);
         }
     }
 }

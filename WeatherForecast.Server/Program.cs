@@ -1,3 +1,4 @@
+using WeatherForecast.BLL;
 using WeatherForecast.BLL.Interfaces;
 using WeatherForecast.BLL.Services;
 
@@ -18,6 +19,8 @@ namespace WeatherForecast.Server
             services.AddSwaggerGen();
 
             services.AddHttpClient();
+
+            services.AddAutoMapper(typeof(WeatherForecastMappingProfile).Assembly);
 
             services.AddHttpClient<IWeatherService, WeatherService>(o => o.BaseAddress = new Uri($"https://api.openweathermap.org/data/2.5/"));
 
