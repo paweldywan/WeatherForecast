@@ -37,8 +37,7 @@ function App() {
 
     const contents = data === undefined
         ? <p><em>Loading....</em></p>
-        :
-        <AppTable
+        : <AppTable
             columns={[
                 { key: "date", label: "Date", type: "dateTime" },
                 { key: "temperatureC", label: "Temp. (C)" },
