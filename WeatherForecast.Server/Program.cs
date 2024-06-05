@@ -23,6 +23,8 @@ namespace WeatherForecast.Server
 
             services.AddHttpClient<IGeocodingService, GeocodingService>(o => o.BaseAddress = new Uri("http://api.openweathermap.org/geo/1.0/"));
 
+            services.AddScoped<IWeatherForecastService, WeatherForecastService>();
+
             var app = builder.Build();
 
             app.UseDefaultFiles();

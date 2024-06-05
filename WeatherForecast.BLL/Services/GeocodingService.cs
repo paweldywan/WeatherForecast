@@ -5,7 +5,7 @@ using WeatherForecast.BLL.Models.GeocodingData;
 
 namespace WeatherForecast.BLL.Services
 {
-    public class GeocodingService(HttpClient httpClient, IConfiguration configuration) : Service(configuration), IGeocodingService
+    public sealed class GeocodingService(HttpClient httpClient, IConfiguration configuration) : Service(configuration), IGeocodingService
     {
         public Task<Geocoding[]?> GetByLocation(GeocodingLocationRequest request)
         {

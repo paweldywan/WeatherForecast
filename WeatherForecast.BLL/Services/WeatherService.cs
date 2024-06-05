@@ -5,7 +5,7 @@ using WeatherForecast.BLL.Models.WeatherData;
 
 namespace WeatherForecast.BLL.Services
 {
-    public class WeatherService(HttpClient httpClient, IConfiguration configuration) : Service(configuration), IWeatherService
+    public sealed class WeatherService(HttpClient httpClient, IConfiguration configuration) : Service(configuration), IWeatherService
     {
         public Task<CurrentWeatherResponse?> GetCurrent(CurrentWeatherRequest request)
         {
