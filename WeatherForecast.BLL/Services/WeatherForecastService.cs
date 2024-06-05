@@ -9,15 +9,34 @@ namespace WeatherForecast.BLL.Services
     {
         public async Task<IEnumerable<WeatherForecastModel>?> Get(decimal latitude, decimal longitude)
         {
-            var request = new ForecastWeatherRequest
+            var currentRequest = new CurrentWeatherRequest
             {
                 Lat = latitude,
                 Lon = longitude
             };
 
-            var response = await weatherService.GetForecast(request);
+            var currentResponse = await weatherService.GetCurrent(currentRequest);
 
-            return response?.List == null ? null : mapper.Map<IEnumerable<WeatherForecastModel>>(response.List);
+            var currentWeather = mapper.Map<WeatherForecastModel>(currentResponse);
+
+            var forecastRequest = new ForecastWeatherRequest
+            {
+                Lat = latitude,
+                Lon = longitude
+            };
+
+            var forecastResponse = await weatherService.GetForecast(forecastRequest);
+
+            var result = forecastResponse?.List == null ? null : mapper.Map<IEnumerable<WeatherForecastModel>>(forecastResponse.List);
+
+            if (currentWeather != null)
+            {
+                result ??= [];
+
+                result = result.Prepend(currentWeather);
+            }
+
+            return result;
         }
     }
 }

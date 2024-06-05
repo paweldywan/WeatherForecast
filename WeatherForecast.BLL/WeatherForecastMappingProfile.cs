@@ -12,6 +12,11 @@ namespace WeatherForecast.BLL
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTimeOffset.FromUnixTimeSeconds(src.Dt).DateTime))
                 .ForMember(dest => dest.TemperatureK, opt => opt.MapFrom(src => src.Main.Temp))
                 .ForMember(dest => dest.Summary, opt => opt.MapFrom(src => src.Weather.First().Description));
+
+            CreateMap<CurrentWeatherResponse, WeatherForecastModel>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTimeOffset.FromUnixTimeSeconds(src.Dt).DateTime))
+                .ForMember(dest => dest.TemperatureK, opt => opt.MapFrom(src => src.Main.Temp))
+                .ForMember(dest => dest.Summary, opt => opt.MapFrom(src => src.Weather.First().Description));
         }
     }
 }
