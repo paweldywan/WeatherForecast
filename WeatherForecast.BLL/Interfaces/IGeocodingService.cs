@@ -4,7 +4,7 @@ namespace WeatherForecast.BLL.Interfaces
 {
     public interface IGeocodingService
     {
-        Task<GeocodingLocationResponse?> Get(GeocodingLocationRequest request);
-        Task<GeocodingZipResponse?> Get(GeocodingZipRequest request);
+        Task<Geocoding[]?> GetByLocation(GeocodingLocationRequest request);
+        Task<GeocodingZipResponse?> GetByZip(GeocodingZipRequest request);
     }
 }

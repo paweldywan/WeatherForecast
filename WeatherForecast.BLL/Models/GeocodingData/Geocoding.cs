@@ -4,7 +4,7 @@
     {
         public required string Name { get; set; }
 
-        public required LocalNames LocalNames { get; set; }
+        public LocalNames? LocalNames { get; set; }
 
         public float Lat { get; set; }
 

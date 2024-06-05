@@ -19,9 +19,9 @@ namespace WeatherForecast.Server
 
             services.AddHttpClient();
 
-            services.AddHttpClient<IWeatherService, WeatherService>(o => o.BaseAddress = new Uri($"https://api.openweathermap.org/data/3.0/onecall"));
+            services.AddHttpClient<IWeatherService, WeatherService>(o => o.BaseAddress = new Uri($"https://api.openweathermap.org/data/2.5/"));
 
-            services.AddHttpClient<IGeocodingService, GeocodingService>(o => o.BaseAddress = new Uri("http://api.openweathermap.org/geo/1.0"));
+            services.AddHttpClient<IGeocodingService, GeocodingService>(o => o.BaseAddress = new Uri("http://api.openweathermap.org/geo/1.0/"));
 
             var app = builder.Build();
 
