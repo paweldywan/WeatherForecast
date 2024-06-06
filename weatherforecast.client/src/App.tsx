@@ -58,7 +58,7 @@ function App() {
             <h1>Weather forecast</h1>
 
             <AppForm
-                rowProps={{ xs: 1, sm: 2, md: 3 }}
+                rowProps={{ xs: 1, sm: 2, md: 3, xl: 4 }}
                 inputs={[
                     {
                         key: "mode",
