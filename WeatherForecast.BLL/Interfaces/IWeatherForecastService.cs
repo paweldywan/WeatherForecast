@@ -4,6 +4,6 @@ namespace WeatherForecast.BLL.Interfaces
 {
     public interface IWeatherForecastService
     {
-        Task<List<WeatherForecastModel>> Get(decimal latitude, decimal longitude);
+        Task<List<WeatherForecastModel>> Get(WeatherForecastRequest request);
     }
 }

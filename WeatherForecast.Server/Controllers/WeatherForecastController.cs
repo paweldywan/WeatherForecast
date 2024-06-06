@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeatherForecast.BLL.Interfaces;
+using WeatherForecast.BLL.Models;
 
 namespace WeatherForecast.Server.Controllers
 {
@@ -8,9 +9,9 @@ namespace WeatherForecast.Server.Controllers
     public class WeatherForecastController(IWeatherForecastService weatherForecastService) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get(decimal latitude, decimal longitude)
+        public async Task<IActionResult> Get([FromQuery] WeatherForecastRequest request)
         {
-            var result = await weatherForecastService.Get(latitude, longitude);
+            var result = await weatherForecastService.Get(request);
 
             return Ok(result);
         }

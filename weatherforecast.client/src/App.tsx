@@ -30,15 +30,16 @@ function App() {
         mode: ForecastMode.Location
     });
 
+    const populateData = async () => {
+        const dataToSet = await getWeatherForecast(forecastData);
+
+        setData(dataToSet);
+    };
+
     useEffect(() => {
-        const populateData = async () => {
-            const dataToSet = await getWeatherForecast(forecastData);
-
-            setData(dataToSet);
-        }
-
         populateData();
-    }, [forecastData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const contents = data === undefined
         ? <p><em>Loading....</em></p>
@@ -58,6 +59,7 @@ function App() {
             <h1>Weather forecast</h1>
 
             <AppForm
+                className="mb-3"
                 rowProps={{ xs: 1, sm: 2, md: 3, xl: 4 }}
                 inputs={[
                     {
@@ -94,16 +96,20 @@ function App() {
                     {
                         key: "latitude",
                         label: "Latitude",
+                        type: "number",
                         visible: forecastData.mode === ForecastMode.Coordinates
                     },
                     {
                         key: "longitude",
                         label: "Longitude",
+                        type: "number",
                         visible: forecastData.mode === ForecastMode.Coordinates
                     }
                 ]}
                 data={forecastData}
                 setData={setForecastData}
+                onSubmit={populateData}
+                buttonText="Refresh"
             />
 
             {contents}

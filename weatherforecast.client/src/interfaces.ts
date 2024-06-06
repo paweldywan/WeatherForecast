@@ -36,7 +36,7 @@ interface Option {
 export interface FormInput<T> {
     key: keyof T;
     label: string;
-    type?: "select" | "text";
+    type?: "select" | "text" | "number";
     options?: Option[];
     visible?: boolean;
 }

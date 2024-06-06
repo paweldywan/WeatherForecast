@@ -1,12 +1,13 @@
 ﻿using WeatherForecast.BLL.Enums.Weather;
+using WeatherForecast.BLL.Interfaces;
 
 namespace WeatherForecast.BLL.Models.WeatherData
 {
-    public class ForecastWeatherRequest
+    public class ForecastWeatherRequest : ICoordinatesRequest
     {
-        public decimal Lat { get; set; }
+        public float Lat { get; set; }
 
-        public decimal Lon { get; set; }
+        public float Lon { get; set; }
 
         public Unit? Units { get; set; }
 

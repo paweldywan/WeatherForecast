@@ -1,39 +1,106 @@
 ﻿using AutoMapper;
+using WeatherForecast.BLL.Enums;
 using WeatherForecast.BLL.Interfaces;
 using WeatherForecast.BLL.Models;
+using WeatherForecast.BLL.Models.GeocodingData;
 using WeatherForecast.BLL.Models.WeatherData;
 
 namespace WeatherForecast.BLL.Services
 {
-    public class WeatherForecastService(IWeatherService weatherService, IMapper mapper) : IWeatherForecastService
+    public class WeatherForecastService(IWeatherService weatherService, IGeocodingService geocodingService, IMapper mapper) : IWeatherForecastService
     {
-        private Task<CurrentWeatherResponse?> GetCurrent(decimal latitude, decimal longitude)
+        private static Task<TOutput?> GetByCoordinates<TRequest, TOutput>(WeatherForecastRequest weatherForecastRequest, Func<TRequest, Task<TOutput?>> func) where TOutput : class where TRequest : ICoordinatesRequest, new()
         {
-            var request = new CurrentWeatherRequest
+            if (weatherForecastRequest.Latitude == null || weatherForecastRequest.Longitude == null)
             {
-                Lat = latitude,
-                Lon = longitude
+                return Task.FromResult<TOutput?>(null);
+            }
+
+            var request = new TRequest
+            {
+                Lat = weatherForecastRequest.Latitude.Value,
+                Lon = weatherForecastRequest.Longitude.Value
             };
 
-            return weatherService.GetCurrent(request);
+            return func(request);
         }
 
-        private Task<ForecastWeatherResponse?> GetForecast(decimal latitude, decimal longitude)
+        private async Task<TOutput?> GetByCity<TRequest, TOutput>(WeatherForecastRequest weatherForecastRequest, Func<TRequest, Task<TOutput?>> func) where TOutput : class where TRequest : ICoordinatesRequest, new()
         {
-            var request = new ForecastWeatherRequest
+            if (string.IsNullOrWhiteSpace(weatherForecastRequest.CityName) || string.IsNullOrWhiteSpace(weatherForecastRequest.CountryCode))
+                return null;
+
+            var geocodingRequest = new GeocodingLocationRequest
             {
-                Lat = latitude,
-                Lon = longitude
+                CityName = weatherForecastRequest.CityName,
+                StateCode = weatherForecastRequest.StateCode,
+                CountryCode = weatherForecastRequest.CountryCode,
+                Limit = 1
             };
 
-            return weatherService.GetForecast(request);
+            var geocodingResponse = await geocodingService.GetByLocation(geocodingRequest);
+
+            if (geocodingResponse == null)
+                return null;
+
+            if (geocodingResponse.Length == 0)
+                return null;
+
+            var request = new TRequest
+            {
+                Lat = geocodingResponse[0].Lat,
+                Lon = geocodingResponse[0].Lon
+            };
+
+            return await func(request);
         }
 
-        public async Task<List<WeatherForecastModel>> Get(decimal latitude, decimal longitude)
+        private async Task<TOutput?> GetByZipCode<TRequest, TOutput>(WeatherForecastRequest weatherForecastRequest, Func<TRequest, Task<TOutput?>> func) where TOutput : class where TRequest : ICoordinatesRequest, new()
+        {
+            if (string.IsNullOrWhiteSpace(weatherForecastRequest.ZipCode) || string.IsNullOrWhiteSpace(weatherForecastRequest.CountryCode))
+                return null;
+
+            var geocodingRequest = new GeocodingZipRequest
+            {
+                ZipCode = weatherForecastRequest.ZipCode,
+                CountryCode = weatherForecastRequest.CountryCode
+            };
+
+            var geocodingResponse = await geocodingService.GetByZip(geocodingRequest);
+
+            if (geocodingResponse == null)
+                return null;
+
+            var request = new TRequest
+            {
+                Lat = geocodingResponse.Lat,
+                Lon = geocodingResponse.Lon
+            };
+
+            return await func(request);
+        }
+
+        private Task<TOutput?> Get<TOutput, TRequest>(WeatherForecastRequest weatherForecastRequest, Func<TRequest, Task<TOutput?>> func) where TOutput : class where TRequest : ICoordinatesRequest, new()
+        {
+            return weatherForecastRequest.Mode switch
+            {
+                WeatherForecastMode.Location => GetByCoordinates(weatherForecastRequest, func),
+                WeatherForecastMode.City => GetByCity(weatherForecastRequest, func),
+                WeatherForecastMode.ZipCode => GetByZipCode(weatherForecastRequest, func),
+                WeatherForecastMode.Coordinates => GetByCoordinates(weatherForecastRequest, func),
+                _ => Task.FromResult<TOutput?>(null)
+            };
+        }
+
+        private Task<CurrentWeatherResponse?> GetCurrent(WeatherForecastRequest weatherForecastRequest) => Get<CurrentWeatherResponse, CurrentWeatherRequest>(weatherForecastRequest, weatherService.GetCurrent);
+
+        private Task<ForecastWeatherResponse?> GetForecast(WeatherForecastRequest weatherForecastRequest) => Get<ForecastWeatherResponse, ForecastWeatherRequest>(weatherForecastRequest, weatherService.GetForecast);
+
+        public async Task<List<WeatherForecastModel>> Get(WeatherForecastRequest request)
         {
             var result = new List<WeatherForecastModel>();
 
-            var currentResponse = await GetCurrent(latitude, longitude);
+            var currentResponse = await GetCurrent(request);
 
             if (currentResponse != null)
             {
@@ -42,7 +109,7 @@ namespace WeatherForecast.BLL.Services
                 result.Add(current);
             }
 
-            var forecastResponse = await GetForecast(latitude, longitude);
+            var forecastResponse = await GetForecast(request);
 
             if (forecastResponse != null)
             {

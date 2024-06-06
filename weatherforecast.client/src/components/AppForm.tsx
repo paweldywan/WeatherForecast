@@ -1,4 +1,5 @@
 import {
+    Button,
     Form,
     FormGroup,
     Input,
@@ -13,17 +14,30 @@ interface Props<T> {
     rowProps: RowProps,
     inputs: FormInput<T>[],
     data: T,
-    setData: (data: T) => void
+    setData: (data: T) => void,
+    onSubmit?: () => void,
+    buttonText?: string,
+    className?: string
 }
 
 const AppForm = <T,>({
     rowProps,
     inputs,
     data,
-    setData
+    setData,
+    onSubmit,
+    buttonText,
+    className
 }: Props<T>) => {
     return (
-        <Form>
+        <Form
+            onSubmit={e => {
+                e.preventDefault();
+
+                onSubmit?.()
+            }}
+            className={className}
+        >
             <Row {...rowProps}>
                 {inputs
                     .filter(i => i.visible !== false)
@@ -45,6 +59,8 @@ const AppForm = <T,>({
                         </FormGroup>
                     )}
             </Row>
+
+            <Button type="submit">{buttonText || 'Submit'}</Button>
         </Form>
     );
 }
