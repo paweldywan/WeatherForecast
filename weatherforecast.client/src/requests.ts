@@ -1,11 +1,14 @@
-export const getWeatherForecast = async () => {
+import { ForecastData } from "./interfaces";
+
+export const getWeatherForecast = async (mode: ForecastData) => {
     const currentCoordinates = await new Promise<GeolocationPosition>((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject));
 
     const { latitude, longitude } = currentCoordinates.coords;
 
     const response = await fetch(`api/weatherforecast?${new URLSearchParams({
         latitude: latitude.toString(),
-        longitude: longitude.toString()
+        longitude: longitude.toString(),
+        mode: mode.toString()
     })}`);
 
     return await response.json();
