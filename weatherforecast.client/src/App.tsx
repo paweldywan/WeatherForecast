@@ -74,37 +74,31 @@ function App() {
                     {
                         key: "countryCode",
                         label: "Country code",
-                        type: "text",
                         visible: forecastData.mode === ForecastMode.City || forecastData.mode === ForecastMode.ZipCode
                     },
                     {
                         key: "stateCode",
                         label: "State code",
-                        type: "text",
                         visible: forecastData.mode === ForecastMode.City
                     },
                     {
                         key: "cityName",
                         label: "City name",
-                        type: "text",
                         visible: forecastData.mode === ForecastMode.City
                     },
                     {
                         key: "zipCode",
                         label: "Zip code",
-                        type: "text",
                         visible: forecastData.mode === ForecastMode.ZipCode
                     },
                     {
                         key: "latitude",
                         label: "Latitude",
-                        type: "text",
                         visible: forecastData.mode === ForecastMode.Coordinates
                     },
                     {
                         key: "longitude",
                         label: "Longitude",
-                        type: "text",
                         visible: forecastData.mode === ForecastMode.Coordinates
                     }
                 ]}
