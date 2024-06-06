@@ -13,7 +13,7 @@ interface Props<T> {
     rowProps: RowProps,
     inputs: FormInput<T>[],
     data: T,
-    setData: (data: T) => void,
+    setData: (data: T) => void
 }
 
 const AppForm = <T,>({
