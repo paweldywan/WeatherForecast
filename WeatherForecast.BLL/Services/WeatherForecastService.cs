@@ -40,16 +40,15 @@ namespace WeatherForecast.BLL.Services
 
             var geocodingResponse = await geocodingService.GetByLocation(geocodingRequest);
 
-            if (geocodingResponse == null)
+            if (geocodingResponse == null || geocodingResponse.Length == 0)
                 return null;
 
-            if (geocodingResponse.Length == 0)
-                return null;
+            var firstResponse = geocodingResponse[0];
 
             var request = new TRequest
             {
-                Lat = geocodingResponse[0].Lat,
-                Lon = geocodingResponse[0].Lon
+                Lat = firstResponse.Lat,
+                Lon = firstResponse.Lon
             };
 
             return await func(request);
