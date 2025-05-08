@@ -45,7 +45,7 @@ namespace WeatherForecast.BLL.Tests.Services
             var expectedResponse = new CurrentWeatherResponse
             {
                 Coord = new Coord { Lat = 40.7128f, Lon = -74.0060f },
-                Weather = new[] { new Weather { Id = 1, Main = "Clear", Description = "clear sky", Icon = "01d" } },
+                Weather = [new Weather { Id = 1, Main = "Clear", Description = "clear sky", Icon = "01d" }],
                 Base = "stations",
                 Main = new SimpleMain { Temp = 25.0f, FeelsLike = 24.0f, TempMin = 20.0f, TempMax = 30.0f, Pressure = 1013, Humidity = 60 },
                 Visibility = 10000,
@@ -98,13 +98,13 @@ namespace WeatherForecast.BLL.Tests.Services
                 Cod = "200",
                 Message = 0,
                 Cnt = 5,
-                List = new[]
-                {
+                List =
+                [
                     new List
                     {
                         Dt = 1625247600,
                         Main = new Main { Temp = 25.0f, FeelsLike = 24.0f, TempMin = 20.0f, TempMax = 30.0f, Pressure = 1013, Humidity = 60 },
-                        Weather = new[] { new Weather { Id = 1, Main = "Clear", Description = "clear sky", Icon = "01d" } },
+                        Weather = [new Weather { Id = 1, Main = "Clear", Description = "clear sky", Icon = "01d" }],
                         Clouds = new Clouds { All = 0 },
                         Wind = new Wind { Speed = 5.0f, Deg = 180, Gust = 7.0f },
                         Visibility = 10000,
@@ -112,7 +112,7 @@ namespace WeatherForecast.BLL.Tests.Services
                         Sys = new SimpleSys { Pod = "d" },
                         DtTxt = "2021-07-02 15:00:00"
                     }
-                },
+                ],
                 City = new City
                 {
                     Id = 5128581,
