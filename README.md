@@ -344,7 +344,7 @@ This project is available as open source. Please check with the repository owner
 
 **Pawel Dywan**
 
-- GitHub: [@paweldywandev](https://github.com/paweldywandev)
+- GitHub: [@paweldywan](https://github.com/paweldywan)
 - Website: https://paweldywan.com/
 
 ## Acknowledgments
